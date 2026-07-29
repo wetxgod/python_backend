@@ -2,6 +2,11 @@ incomes = []
 expenses = []
 
 
+def pause():
+    print()
+    input("Press Enter to continue...")
+
+
 def add_income():
     amount = float(input("Enter income amount: "))
     incomes.append(amount)
@@ -60,30 +65,38 @@ def show_menu():
 
 def handle_choice(choice):
     print(f"You selected: {choice}")
+    print()
 
     if choice == "1":
         add_income()
+        pause()
 
     elif choice == "2":
         add_expense()
+        pause()
 
     elif choice == "3":
         show_balance()
+        pause()
 
     elif choice == "4":
         show_history()
+        pause()
 
     elif choice == "5":
         print("Goodbye!")
 
     elif choice == "6":
         show_about()
+        pause()
 
     elif choice == "7":
         show_settings()
+        pause()
 
     else:
         print("Invalid option. Please try again.")
+        pause()
 
 
 def show_about():
@@ -94,6 +107,10 @@ def show_settings():
     print("Settings will be available soon.")
 
 
-show_menu()
-choice = input("Choose option: ")
-handle_choice(choice)
+while True:
+    show_menu()
+    choice = input("Choose option: ")
+    handle_choice(choice)
+
+    if choice == "5":
+        break
