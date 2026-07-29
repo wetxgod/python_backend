@@ -1,3 +1,49 @@
+incomes = []
+expenses = []
+
+
+def add_income():
+    amount = float(input("Enter income amount: "))
+    incomes.append(amount)
+    print(f"Income of {amount} added.")
+
+
+def add_expense():
+    amount = float(input("Enter expense amount: "))
+    expenses.append(amount)
+    print(f"Expense of {amount} added.")
+
+
+def show_balance():
+    total_income = sum(incomes)
+    total_expense = sum(expenses)
+    balance = total_income - total_expense
+    print(f"Total Income: {total_income}")
+    print()
+    print(f"Total Expense: {total_expense}")
+    print()
+    print(f"Balance: {balance}")
+
+
+def show_history():
+    print("Income:")
+
+    if not incomes:
+        print("No income yet.")
+    else:
+        for income in incomes:
+            print(f"- {income}")
+
+    print()
+
+    print("Expenses:")
+    if not expenses:
+        print("No expenses yet.")
+    else:
+        for expense in expenses:
+            print(f"- {expense}")
+
+
 def show_menu():
     print("=" * 35)
     print("Personal Finance Tracker")
@@ -16,16 +62,16 @@ def handle_choice(choice):
     print(f"You selected: {choice}")
 
     if choice == "1":
-        print("Opening income menu...")
+        add_income()
 
     elif choice == "2":
-        print("Opening expense menu...")
+        add_expense()
 
     elif choice == "3":
-        print("Balance selected.")
+        show_balance()
 
     elif choice == "4":
-        print("History selected.")
+        show_history()
 
     elif choice == "5":
         print("Goodbye!")
