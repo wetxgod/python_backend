@@ -8,14 +8,31 @@ def pause():
 
 
 def add_income():
-    amount = float(input("Enter income amount: "))
-    incomes.append(amount)
-    print(f"Income of {amount} added.")
+    while True:
+        try:
+            amount = float(input("Enter income amount: "))
+            incomes.append(amount)
+            print(f"Income of {amount} added.")
+            break
+        except ValueError:
+            print("Invalid input. Please enter a valid number.")
 
 
 def add_expense():
-    amount = float(input("Enter expense amount: "))
-    expenses.append(amount)
+    while True:
+        try:
+            amount = float(input("Enter expense amount: "))
+            if amount < 0:
+                print("Expense amount cannot be negative. Please enter a valid number.")
+                continue
+            if amount == 0:
+                print("Amount must be greater than zero. Please enter a valid number.")
+                continue
+            expenses.append(amount)
+            print(f"Expense of {amount} added.")
+            break
+        except ValueError:
+            print("Invalid input. Please enter a valid number.")
     print(f"Expense of {amount} added.")
 
 
