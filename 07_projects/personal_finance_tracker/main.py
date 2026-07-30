@@ -72,19 +72,33 @@ def show_history():
 
 
 def show_statistics():
-    if incomes:
-        income_count = len(incomes)
-        expense_count = len(expenses)
-        average_income = sum(incomes) / income_count if income_count > 0 else 0
-        average_expense = sum(expenses) / expense_count if expense_count > 0 else 0
 
-        print("Statistics:")
-        print()
-        print(f"Income count: {income_count}")
-        print(f"Expense count: {expense_count}")
-        print()
+    income_count = len(incomes)
+    expense_count = len(expenses)
+    if incomes:
+        highest_income = max(incomes)
+        lowest_income = min(incomes)
+        average_income = sum(incomes) / income_count
+    if expenses:
+        average_expense = sum(expenses) / expense_count
+
+    print("Statistics:")
+    print()
+    print(f"Income count: {income_count}")
+    if incomes:
         print(f"Average income: {average_income}")
+    else:
+        print("No income data.")
+    print()
+    print(f"Expense count: {expense_count}")
+    if expenses:
         print(f"Average expense: {average_expense}")
+    else:
+        print("No expense data.")
+    print()
+    if incomes:
+        print(f"Highest income: {highest_income}")
+        print(f"Lowest income: {lowest_income}")
 
 
 def show_menu():
