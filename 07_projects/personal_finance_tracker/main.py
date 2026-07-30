@@ -11,6 +11,12 @@ def add_income():
     while True:
         try:
             amount = float(input("Enter income amount: "))
+            if amount < 0:
+                print("Income amount cannot be negative. Please enter a valid number.")
+                continue
+            if amount == 0:
+                print("Amount must be greater than zero. Please enter a valid number.")
+                continue
             incomes.append(amount)
             print(f"Income of {amount} added.")
             break
@@ -33,7 +39,6 @@ def add_expense():
             break
         except ValueError:
             print("Invalid input. Please enter a valid number.")
-    print(f"Expense of {amount} added.")
 
 
 def show_balance():
@@ -66,6 +71,22 @@ def show_history():
             print(f"- {expense}")
 
 
+def show_statistics():
+    if incomes:
+        income_count = len(incomes)
+        expense_count = len(expenses)
+        average_income = sum(incomes) / income_count if income_count > 0 else 0
+        average_expense = sum(expenses) / expense_count if expense_count > 0 else 0
+
+        print("Statistics:")
+        print()
+        print(f"Income count: {income_count}")
+        print(f"Expense count: {expense_count}")
+        print()
+        print(f"Average income: {average_income}")
+        print(f"Average expense: {average_expense}")
+
+
 def show_menu():
     print("=" * 35)
     print("Personal Finance Tracker")
@@ -78,6 +99,7 @@ def show_menu():
     print("5. Exit")
     print("6. About")
     print("7. Settings")
+    print("8. Show statistics")
 
 
 def handle_choice(choice):
@@ -109,6 +131,10 @@ def handle_choice(choice):
 
     elif choice == "7":
         show_settings()
+        pause()
+
+    elif choice == "8":
+        show_statistics()
         pause()
 
     else:
