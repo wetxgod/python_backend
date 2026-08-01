@@ -199,3 +199,61 @@ def test_add_expense_creates_transaction():
     assert transaction.amount == 1000
     assert transaction.transaction_type == "expense"
     assert transaction.category == "food"
+
+
+def test_transactions_keep_order():
+    tracker = FinanceTracker()
+
+    tracker.add_income(50000, category="salary")
+    tracker.add_expense(1000, category="food")
+    tracker.add_income(5000, category="freelance")
+
+    transactions = tracker.get_transactions()
+
+    assert transactions[0].transaction_type == "income"
+    assert transactions[0].category == "salary"
+
+    assert transactions[1].transaction_type == "expense"
+    assert transactions[1].category == "food"
+
+    assert transactions[2].transaction_type == "income"
+    assert transactions[2].category == "freelance"
+
+
+def test_get_expenses_by_category():
+    tracker = FinanceTracker()
+
+    tracker.add_expense(1000, category="food")
+    tracker.add_expense(1500, category="food")
+    tracker.add_expense(500, category="transport")
+    tracker.add_income(50000, category="salary")
+
+    result = tracker.get_expenses_by_category()
+
+    assert result == {
+        "food": 2500,
+        "transport": 500,
+    }
+
+
+def test_get_incomes_by_category():
+    tracker = FinanceTracker()
+
+    tracker.add_income(50000, category="salary")
+    tracker.add_income(10000, category="freelance")
+    tracker.add_income(5000, category="freelance")
+    tracker.add_expense(1000, category="food")
+
+    result = tracker.get_incomes_by_category()
+
+    assert result == {
+        "salary": 50000,
+        "freelance": 15000,
+    }
+
+
+def test_empty_category_reports():
+    tracker = FinanceTracker()
+
+    assert tracker.get_incomes_by_category() == {}
+    assert tracker.get_expenses_by_category() == {}

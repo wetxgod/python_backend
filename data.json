@@ -1,8 +1,16 @@
 {
-    "incomes": [
-        34857348975897.0
-    ],
-    "expenses": [
-        429394234.0
+    "transactions": [
+        {
+            "amount": 23545.0,
+            "transaction_type": "income",
+            "category": "fuck",
+            "description": "lol"
+        },
+        {
+            "amount": 99.0,
+            "transaction_type": "expense",
+            "category": "qwe",
+            "description": "ttt"
+        }
     ]
 }

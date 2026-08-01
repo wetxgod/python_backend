@@ -18,8 +18,18 @@ def add_income():
             print("Invalid input. Please enter a valid number.")
             continue
 
+        category = input("Enter income category: ").strip()
+        description = input("Enter description: ").strip()
+
+        if not category:
+            category = "other"
+
         try:
-            tracker.add_income(amount)
+            tracker.add_income(
+                amount,
+                category=category,
+                description=description,
+            )
         except ValueError as error:
             print(error)
             continue
@@ -37,14 +47,23 @@ def add_expense():
             print("Invalid input. Please enter a valid number.")
             continue
 
+        category = input("Enter expense category: ").strip()
+        description = input("Enter description: ").strip()
+
+        if not category:
+            category = "other"
+
         try:
-            tracker.add_expense(amount)
+            tracker.add_expense(
+                amount,
+                category=category,
+                description=description,
+            )
         except ValueError as error:
             print(error)
             continue
 
         save_data(tracker.to_dict())
-
         print(f"Expense of {amount:.2f} added.")
         break
 
@@ -61,25 +80,25 @@ def show_balance():
 
 
 def show_history():
-    incomes = tracker.get_incomes()
-    expenses = tracker.get_expenses()
+    transactions = tracker.get_transactions()
 
-    print("Income:")
+    if not transactions:
+        print("No transactions yet.")
+        return
 
-    if not incomes:
-        print("No income yet.")
-    else:
-        for income in incomes:
-            print(f"+ {income:.2f}")
-
+    print("Transaction history:")
     print()
-    print("Expenses:")
 
-    if not expenses:
-        print("No expenses yet.")
-    else:
-        for expense in expenses:
-            print(f"- {expense:.2f}")
+    for index, transaction in enumerate(transactions, start=1):
+        if transaction.transaction_type == "income":
+            sign = "+"
+        else:
+            sign = "-"
+
+        print(f"{index}. {sign}{transaction.amount:.2f} " f"| {transaction.category}")
+
+        if transaction.description:
+            print(f"   {transaction.description}")
 
 
 def show_statistics():
@@ -138,6 +157,7 @@ def show_menu():
     print("7. Settings")
     print("8. Show statistics")
     print("9. Clear all data")
+    print("10. Show category report")
 
 
 def handle_choice(choice):
@@ -180,6 +200,10 @@ def handle_choice(choice):
         clear_data()
         pause()
 
+    elif choice == "10":
+        show_category_report()
+        pause()
+
     else:
         print("Invalid option. Please try again.")
         pause()
@@ -204,6 +228,30 @@ def main():
 
         if not should_continue:
             break
+
+
+def show_category_report():
+    incomes = tracker.get_incomes_by_category()
+    expenses = tracker.get_expenses_by_category()
+
+    print("Category report:")
+    print()
+    print("Income categories:")
+
+    if not incomes:
+        print("No income data.")
+    else:
+        for category, total in incomes.items():
+            print(f"{category}: {total:.2f}")
+
+    print()
+    print("Expense categories:")
+
+    if not expenses:
+        print("No expense data.")
+    else:
+        for category, total in expenses.items():
+            print(f"{category}: {total:.2f}")
 
 
 if __name__ == "__main__":

@@ -122,3 +122,37 @@ class FinanceTracker:
 
     def clear_data(self):
         self.transactions.clear()
+
+    def get_expenses_by_category(self):
+        expenses_by_category = {}
+
+        for transaction in self.transactions:
+            if transaction.transaction_type != "expense":
+                continue
+
+            category = transaction.category
+            amount = transaction.amount
+
+            if category not in expenses_by_category:
+                expenses_by_category[category] = 0
+
+            expenses_by_category[category] += amount
+
+        return expenses_by_category
+
+    def get_incomes_by_category(self):
+        incomes_by_category = {}
+
+        for transaction in self.transactions:
+            if transaction.transaction_type != "income":
+                continue
+
+            category = transaction.category
+            amount = transaction.amount
+
+            if category not in incomes_by_category:
+                incomes_by_category[category] = 0
+
+            incomes_by_category[category] += amount
+
+        return incomes_by_category
