@@ -242,17 +242,6 @@ def show_settings():
     print("Settings will be available soon.")
 
 
-def main():
-    while True:
-        show_menu()
-        choice = input("Enter your choice (1-15): ")
-
-        should_continue = handle_choice(choice)
-
-        if not should_continue:
-            break
-
-
 def show_category_report():
     incomes = tracker.get_incomes_by_category()
     expenses = tracker.get_expenses_by_category()
@@ -489,6 +478,17 @@ def show_monthly_report():
 
         print(f"{index}. {sign}{transaction.amount:.2f} " f"| {transaction.category}")
         print(f"   Date: {transaction.created_at}")
+
+
+def main():
+    while True:
+        show_menu()
+        choice = input("Enter your choice (1-15): ")
+
+        should_continue = handle_choice(choice)
+
+        if not should_continue:
+            break
 
 
 if __name__ == "__main__":

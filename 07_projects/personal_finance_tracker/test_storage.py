@@ -41,8 +41,7 @@ def test_load_data_when_file_does_not_exist(tmp_path):
     loaded_data = load_data(file_path)
 
     assert loaded_data == {
-        "incomes": [],
-        "expenses": [],
+        "transactions": [],
     }
 
 
@@ -55,6 +54,5 @@ def test_load_invalid_json(tmp_path):
     loaded_data = load_data(file_path)
 
     assert loaded_data == {
-        "incomes": [],
-        "expenses": [],
+        "transactions": [],
     }

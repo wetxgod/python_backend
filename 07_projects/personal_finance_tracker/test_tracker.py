@@ -598,3 +598,22 @@ def test_monthly_report_with_invalid_month():
         match="Month must be between 1 and 12.",
     ):
         tracker.get_monthly_report(2026, 13)
+
+
+def test_load_data_with_invalid_type():
+    tracker = FinanceTracker()
+
+    tracker.add_income(50000)
+
+    tracker.load_data(None)
+
+    assert tracker.get_transactions() == []
+    assert tracker.calculate_balance() == 0
+
+
+def test_load_data_with_list():
+    tracker = FinanceTracker()
+
+    tracker.load_data([])
+
+    assert tracker.get_transactions() == []

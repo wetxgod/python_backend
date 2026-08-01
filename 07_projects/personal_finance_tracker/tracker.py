@@ -109,6 +109,9 @@ class FinanceTracker:
     def load_data(self, data):
         self.transactions.clear()
 
+        if not isinstance(data, dict):
+            return
+
         if "transactions" in data:
             for transaction_data in data["transactions"]:
                 transaction = Transaction.from_dict(transaction_data)
