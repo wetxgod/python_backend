@@ -160,6 +160,7 @@ def show_menu():
     print("12. Delete transaction")
     print("13. Update transaction")
     print("14. Sort transactions")
+    print("15. Show monthly report")
 
 
 def handle_choice(choice):
@@ -222,6 +223,10 @@ def handle_choice(choice):
         show_sorted_transactions()
         pause()
 
+    elif choice == "15":
+        show_monthly_report()
+        pause()
+
     else:
         print("Invalid option. Please try again.")
         pause()
@@ -240,7 +245,7 @@ def show_settings():
 def main():
     while True:
         show_menu()
-        choice = input("Enter your choice (1-14): ")
+        choice = input("Enter your choice (1-15): ")
 
         should_continue = handle_choice(choice)
 
@@ -446,6 +451,44 @@ def show_sorted_transactions():
 
         if transaction.description:
             print(f"   {transaction.description}")
+
+
+def show_monthly_report():
+    try:
+        year = int(input("Enter year: "))
+        month = int(input("Enter month (1-12): "))
+    except ValueError:
+        print("Invalid input. Please enter whole numbers.")
+        return
+
+    try:
+        report = tracker.get_monthly_report(year, month)
+    except ValueError as error:
+        print(error)
+        return
+
+    print()
+    print(f"Monthly report: {year}-{month:02d}")
+    print(f"Transactions: {report['transaction_count']}")
+    print(f"Total income: {report['total_income']:.2f}")
+    print(f"Total expense: {report['total_expense']:.2f}")
+    print(f"Balance: {report['balance']:.2f}")
+
+    transactions = report["transactions"]
+
+    if not transactions:
+        print()
+        print("No transactions for this month.")
+        return
+
+    print()
+    print("Transactions:")
+
+    for index, transaction in enumerate(transactions, start=1):
+        sign = "+" if transaction.transaction_type == "income" else "-"
+
+        print(f"{index}. {sign}{transaction.amount:.2f} " f"| {transaction.category}")
+        print(f"   Date: {transaction.created_at}")
 
 
 if __name__ == "__main__":

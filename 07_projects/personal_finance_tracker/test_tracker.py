@@ -530,3 +530,71 @@ def test_sort_transactions_does_not_change_original_order():
         1000,
         500,
     ]
+
+
+def test_get_transactions_by_month():
+    tracker = FinanceTracker()
+
+    tracker.add_income(50000, category="salary")
+    tracker.add_expense(1000, category="food")
+    tracker.add_expense(500, category="transport")
+
+    transactions = tracker.get_transactions()
+
+    transactions[0].created_at = "2026-08-01T10:00:00"
+    transactions[1].created_at = "2026-08-15T12:00:00"
+    transactions[2].created_at = "2026-09-01T09:00:00"
+
+    august_transactions = tracker.get_transactions_by_month(
+        2026,
+        8,
+    )
+
+    assert len(august_transactions) == 2
+    assert august_transactions[0].amount == 50000
+    assert august_transactions[1].amount == 1000
+
+
+def test_get_monthly_report():
+    tracker = FinanceTracker()
+
+    tracker.add_income(50000)
+    tracker.add_income(10000)
+    tracker.add_expense(15000)
+    tracker.add_expense(5000)
+
+    transactions = tracker.get_transactions()
+
+    transactions[0].created_at = "2026-08-01T10:00:00"
+    transactions[1].created_at = "2026-08-10T10:00:00"
+    transactions[2].created_at = "2026-08-15T10:00:00"
+    transactions[3].created_at = "2026-09-01T10:00:00"
+
+    report = tracker.get_monthly_report(2026, 8)
+
+    assert report["transaction_count"] == 3
+    assert report["total_income"] == 60000
+    assert report["total_expense"] == 15000
+    assert report["balance"] == 45000
+
+
+def test_empty_monthly_report():
+    tracker = FinanceTracker()
+
+    report = tracker.get_monthly_report(2026, 8)
+
+    assert report["transaction_count"] == 0
+    assert report["transactions"] == []
+    assert report["total_income"] == 0
+    assert report["total_expense"] == 0
+    assert report["balance"] == 0
+
+
+def test_monthly_report_with_invalid_month():
+    tracker = FinanceTracker()
+
+    with pytest.raises(
+        ValueError,
+        match="Month must be between 1 and 12.",
+    ):
+        tracker.get_monthly_report(2026, 13)

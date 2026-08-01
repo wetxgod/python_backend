@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from models import Transaction
 
 
@@ -227,16 +229,41 @@ class FinanceTracker:
             reverse=reverse,
         )
 
-    def sort_transactions(self, sort_by="date", reverse=False):
-        if sort_by == "date":
-            key_function = lambda transaction: transaction.created_at
-        elif sort_by == "amount":
-            key_function = lambda transaction: transaction.amount
-        else:
-            raise ValueError("Invalid sort option.")
+    def get_transactions_by_month(self, year, month):
+        if month < 1 or month > 12:
+            raise ValueError("Month must be between 1 and 12.")
 
-        return sorted(
-            self.transactions,
-            key=key_function,
-            reverse=reverse,
+        result = []
+
+        for transaction in self.transactions:
+            transaction_date = datetime.fromisoformat(transaction.created_at)
+
+            if transaction_date.year == year and transaction_date.month == month:
+                result.append(transaction)
+
+        return result
+
+    def get_monthly_report(self, year, month):
+        transactions = self.get_transactions_by_month(year, month)
+
+        total_income = sum(
+            transaction.amount
+            for transaction in transactions
+            if transaction.transaction_type == "income"
         )
+
+        total_expense = sum(
+            transaction.amount
+            for transaction in transactions
+            if transaction.transaction_type == "expense"
+        )
+
+        return {
+            "year": year,
+            "month": month,
+            "transactions": transactions,
+            "transaction_count": len(transactions),
+            "total_income": total_income,
+            "total_expense": total_expense,
+            "balance": total_income - total_expense,
+        }
