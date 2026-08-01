@@ -313,3 +313,59 @@ def test_filter_transactions_is_case_insensitive():
     transactions = tracker.filter_transactions(category="food")
 
     assert len(transactions) == 1
+
+
+def test_delete_transaction():
+    tracker = FinanceTracker()
+
+    tracker.add_income(50000, category="salary")
+    tracker.add_expense(1000, category="food")
+    tracker.add_expense(500, category="transport")
+
+    deleted_transaction = tracker.delete_transaction(1)
+    transactions = tracker.get_transactions()
+
+    assert deleted_transaction.amount == 1000
+    assert deleted_transaction.transaction_type == "expense"
+    assert deleted_transaction.category == "food"
+
+    assert len(transactions) == 2
+    assert transactions[0].category == "salary"
+    assert transactions[1].category == "transport"
+    assert tracker.calculate_balance() == 49500
+
+
+def test_delete_first_transaction():
+    tracker = FinanceTracker()
+
+    tracker.add_income(50000)
+    tracker.add_expense(1000)
+
+    tracker.delete_transaction(0)
+
+    transactions = tracker.get_transactions()
+
+    assert len(transactions) == 1
+    assert transactions[0].transaction_type == "expense"
+    assert tracker.calculate_balance() == -1000
+
+
+def test_delete_transaction_with_invalid_index():
+    tracker = FinanceTracker()
+
+    tracker.add_income(50000)
+
+    with pytest.raises(
+        IndexError,
+        match="Transaction not found.",
+    ):
+        tracker.delete_transaction(5)
+
+
+def test_delete_transaction_with_negative_index():
+    tracker = FinanceTracker()
+
+    tracker.add_income(50000)
+
+    with pytest.raises(IndexError):
+        tracker.delete_transaction(-1)

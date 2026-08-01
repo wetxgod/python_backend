@@ -180,3 +180,9 @@ class FinanceTracker:
             result.append(transaction)
 
         return result
+
+    def delete_transaction(self, index):
+        if index < 0 or index >= len(self.transactions):
+            raise IndexError("Transaction not found.")
+
+        return self.transactions.pop(index)

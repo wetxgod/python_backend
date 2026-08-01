@@ -159,6 +159,7 @@ def show_menu():
     print("9. Clear all data")
     print("10. Show category report")
     print("11. Show filtered transactions")
+    print("12. Delete transaction")
 
 
 def handle_choice(choice):
@@ -207,6 +208,10 @@ def handle_choice(choice):
 
     elif choice == "11":
         show_filtered_transactions()
+        pause()
+
+    elif choice == "12":
+        delete_transaction()
         pause()
 
     else:
@@ -295,6 +300,39 @@ def show_filtered_transactions():
 
         if transaction.description:
             print(f"   {transaction.description}")
+
+
+def delete_transaction():
+    transactions = tracker.get_transactions()
+
+    if not transactions:
+        print("No transactions to delete.")
+        return
+
+    show_history()
+    print()
+
+    try:
+        transaction_number = int(input("Enter transaction number to delete: "))
+    except ValueError:
+        print("Invalid input. Please enter a whole number.")
+        return
+
+    transaction_index = transaction_number - 1
+
+    try:
+        deleted_transaction = tracker.delete_transaction(transaction_index)
+    except IndexError as error:
+        print(error)
+        return
+
+    save_data(tracker.to_dict())
+
+    print(
+        f"Deleted: {deleted_transaction.transaction_type} "
+        f"{deleted_transaction.amount:.2f} "
+        f"| {deleted_transaction.category}"
+    )
 
 
 if __name__ == "__main__":
