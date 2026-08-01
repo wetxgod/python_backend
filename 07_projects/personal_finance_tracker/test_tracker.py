@@ -257,3 +257,59 @@ def test_empty_category_reports():
 
     assert tracker.get_incomes_by_category() == {}
     assert tracker.get_expenses_by_category() == {}
+
+
+def test_filter_transactions_by_type():
+    tracker = FinanceTracker()
+
+    tracker.add_income(50000, category="salary")
+    tracker.add_expense(1000, category="food")
+    tracker.add_expense(500, category="transport")
+
+    transactions = tracker.filter_transactions(transaction_type="expense")
+
+    assert len(transactions) == 2
+    assert all(
+        transaction.transaction_type == "expense" for transaction in transactions
+    )
+
+
+def test_filter_transactions_by_category():
+    tracker = FinanceTracker()
+
+    tracker.add_expense(1000, category="food")
+    tracker.add_expense(1500, category="food")
+    tracker.add_expense(500, category="transport")
+
+    transactions = tracker.filter_transactions(category="food")
+
+    assert len(transactions) == 2
+    assert all(transaction.category == "food" for transaction in transactions)
+
+
+def test_filter_transactions_by_type_and_category():
+    tracker = FinanceTracker()
+
+    tracker.add_income(5000, category="freelance")
+    tracker.add_expense(1000, category="freelance")
+    tracker.add_expense(500, category="food")
+
+    transactions = tracker.filter_transactions(
+        transaction_type="expense",
+        category="freelance",
+    )
+
+    assert len(transactions) == 1
+    assert transactions[0].amount == 1000
+    assert transactions[0].transaction_type == "expense"
+    assert transactions[0].category == "freelance"
+
+
+def test_filter_transactions_is_case_insensitive():
+    tracker = FinanceTracker()
+
+    tracker.add_expense(1000, category="Food")
+
+    transactions = tracker.filter_transactions(category="food")
+
+    assert len(transactions) == 1

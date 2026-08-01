@@ -158,6 +158,7 @@ def show_menu():
     print("8. Show statistics")
     print("9. Clear all data")
     print("10. Show category report")
+    print("11. Show filtered transactions")
 
 
 def handle_choice(choice):
@@ -202,6 +203,10 @@ def handle_choice(choice):
 
     elif choice == "10":
         show_category_report()
+        pause()
+
+    elif choice == "11":
+        show_filtered_transactions()
         pause()
 
     else:
@@ -252,6 +257,44 @@ def show_category_report():
     else:
         for category, total in expenses.items():
             print(f"{category}: {total:.2f}")
+
+
+def show_filtered_transactions():
+    transaction_type = (
+        input("Enter type (income/expense or leave empty): ").strip().lower()
+    )
+
+    category = input("Enter category or leave empty: ").strip()
+
+    if not transaction_type:
+        transaction_type = None
+
+    if not category:
+        category = None
+
+    if transaction_type not in (None, "income", "expense"):
+        print("Invalid transaction type.")
+        return
+
+    transactions = tracker.filter_transactions(
+        transaction_type=transaction_type,
+        category=category,
+    )
+
+    if not transactions:
+        print("No matching transactions.")
+        return
+
+    print()
+    print("Filtered transactions:")
+
+    for index, transaction in enumerate(transactions, start=1):
+        sign = "+" if transaction.transaction_type == "income" else "-"
+
+        print(f"{index}. {sign}{transaction.amount:.2f} " f"| {transaction.category}")
+
+        if transaction.description:
+            print(f"   {transaction.description}")
 
 
 if __name__ == "__main__":

@@ -156,3 +156,27 @@ class FinanceTracker:
             incomes_by_category[category] += amount
 
         return incomes_by_category
+
+    def filter_transactions(
+        self,
+        transaction_type=None,
+        category=None,
+    ):
+        result = []
+
+        for transaction in self.transactions:
+            if (
+                transaction_type is not None
+                and transaction.transaction_type != transaction_type
+            ):
+                continue
+
+            if (
+                category is not None
+                and transaction.category.lower() != category.lower()
+            ):
+                continue
+
+            result.append(transaction)
+
+        return result
