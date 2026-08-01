@@ -160,6 +160,7 @@ def show_menu():
     print("10. Show category report")
     print("11. Show filtered transactions")
     print("12. Delete transaction")
+    print("13. Update transaction")
 
 
 def handle_choice(choice):
@@ -212,6 +213,10 @@ def handle_choice(choice):
 
     elif choice == "12":
         delete_transaction()
+        pause()
+
+    elif choice == "13":
+        update_transaction()
         pause()
 
     else:
@@ -332,6 +337,74 @@ def delete_transaction():
         f"Deleted: {deleted_transaction.transaction_type} "
         f"{deleted_transaction.amount:.2f} "
         f"| {deleted_transaction.category}"
+    )
+
+
+def update_transaction():
+    transactions = tracker.get_transactions()
+
+    if not transactions:
+        print("No transactions to update.")
+        return
+
+    show_history()
+    print()
+
+    try:
+        transaction_number = int(input("Enter transaction number to update: "))
+    except ValueError:
+        print("Invalid input. Please enter a whole number.")
+        return
+
+    transaction_index = transaction_number - 1
+
+    try:
+        current_transaction = transactions[transaction_index]
+    except IndexError:
+        print("Transaction not found.")
+        return
+
+    amount_input = input(
+        f"Enter new amount [{current_transaction.amount:.2f}]: "
+    ).strip()
+
+    category_input = input(
+        f"Enter new category [{current_transaction.category}]: "
+    ).strip()
+
+    description_input = input(
+        f"Enter new description [{current_transaction.description}]: "
+    ).strip()
+
+    new_amount = None
+
+    if amount_input:
+        try:
+            new_amount = float(amount_input)
+        except ValueError:
+            print("Invalid amount.")
+            return
+
+    new_category = category_input or None
+    new_description = description_input or None
+
+    try:
+        updated_transaction = tracker.update_transaction(
+            transaction_index,
+            amount=new_amount,
+            category=new_category,
+            description=new_description,
+        )
+    except (IndexError, ValueError) as error:
+        print(error)
+        return
+
+    save_data(tracker.to_dict())
+
+    print(
+        f"Updated: {updated_transaction.transaction_type} "
+        f"{updated_transaction.amount:.2f} "
+        f"| {updated_transaction.category}"
     )
 
 

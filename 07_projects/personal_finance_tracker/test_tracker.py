@@ -369,3 +369,75 @@ def test_delete_transaction_with_negative_index():
 
     with pytest.raises(IndexError):
         tracker.delete_transaction(-1)
+
+
+def test_update_transaction():
+    tracker = FinanceTracker()
+
+    tracker.add_expense(
+        1000,
+        category="food",
+        description="Groceries",
+    )
+
+    updated_transaction = tracker.update_transaction(
+        0,
+        amount=1500,
+        category="transport",
+        description="Taxi",
+    )
+
+    assert updated_transaction.amount == 1500
+    assert updated_transaction.category == "transport"
+    assert updated_transaction.description == "Taxi"
+    assert updated_transaction.transaction_type == "expense"
+    assert tracker.get_total_expense() == 1500
+
+
+def test_update_only_transaction_category():
+    tracker = FinanceTracker()
+
+    tracker.add_income(
+        50000,
+        category="other",
+        description="Salary",
+    )
+
+    tracker.update_transaction(
+        0,
+        category="salary",
+    )
+
+    transaction = tracker.get_transactions()[0]
+
+    assert transaction.amount == 50000
+    assert transaction.category == "salary"
+    assert transaction.description == "Salary"
+
+
+def test_update_transaction_with_invalid_amount():
+    tracker = FinanceTracker()
+
+    tracker.add_expense(1000)
+
+    with pytest.raises(
+        ValueError,
+        match="Amount must be greater than zero.",
+    ):
+        tracker.update_transaction(
+            0,
+            amount=0,
+        )
+
+
+def test_update_missing_transaction():
+    tracker = FinanceTracker()
+
+    with pytest.raises(
+        IndexError,
+        match="Transaction not found.",
+    ):
+        tracker.update_transaction(
+            5,
+            amount=1000,
+        )

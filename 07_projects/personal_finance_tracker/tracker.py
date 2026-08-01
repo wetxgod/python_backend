@@ -186,3 +186,27 @@ class FinanceTracker:
             raise IndexError("Transaction not found.")
 
         return self.transactions.pop(index)
+
+    def update_transaction(
+        self,
+        index,
+        amount=None,
+        category=None,
+        description=None,
+    ):
+        if index < 0 or index >= len(self.transactions):
+            raise IndexError("Transaction not found.")
+
+        transaction = self.transactions[index]
+
+        if amount is not None:
+            self._validate_amount(amount)
+            transaction.amount = amount
+
+        if category is not None:
+            transaction.category = category
+
+        if description is not None:
+            transaction.description = description
+
+        return transaction
