@@ -210,3 +210,33 @@ class FinanceTracker:
             transaction.description = description
 
         return transaction
+
+    def sort_transactions(self, sort_by="date", reverse=False):
+        if sort_by == "date":
+            key_function = lambda transaction: transaction.created_at
+
+        elif sort_by == "amount":
+            key_function = lambda transaction: transaction.amount
+
+        else:
+            raise ValueError("Invalid sort option.")
+
+        return sorted(
+            self.transactions,
+            key=key_function,
+            reverse=reverse,
+        )
+
+    def sort_transactions(self, sort_by="date", reverse=False):
+        if sort_by == "date":
+            key_function = lambda transaction: transaction.created_at
+        elif sort_by == "amount":
+            key_function = lambda transaction: transaction.amount
+        else:
+            raise ValueError("Invalid sort option.")
+
+        return sorted(
+            self.transactions,
+            key=key_function,
+            reverse=reverse,
+        )

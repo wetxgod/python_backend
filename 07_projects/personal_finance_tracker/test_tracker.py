@@ -439,3 +439,94 @@ def test_update_missing_transaction():
             5,
             amount=1000,
         )
+
+
+def test_sort_transactions_by_amount_ascending():
+    tracker = FinanceTracker()
+
+    tracker.add_expense(1500, category="food")
+    tracker.add_income(50000, category="salary")
+    tracker.add_expense(500, category="transport")
+
+    transactions = tracker.sort_transactions(
+        sort_by="amount",
+    )
+
+    assert [transaction.amount for transaction in transactions] == [
+        500,
+        1500,
+        50000,
+    ]
+
+
+def test_sort_transactions_by_amount_descending():
+    tracker = FinanceTracker()
+
+    tracker.add_expense(1500)
+    tracker.add_income(50000)
+    tracker.add_expense(500)
+
+    transactions = tracker.sort_transactions(
+        sort_by="amount",
+        reverse=True,
+    )
+
+    assert [transaction.amount for transaction in transactions] == [
+        50000,
+        1500,
+        500,
+    ]
+
+
+def test_sort_transactions_by_date():
+    tracker = FinanceTracker()
+
+    tracker.add_income(50000)
+    tracker.add_expense(1000)
+    tracker.add_expense(500)
+
+    transactions = tracker.get_transactions()
+
+    transactions[0].created_at = "2026-08-01T10:00:00"
+    transactions[1].created_at = "2026-08-03T10:00:00"
+    transactions[2].created_at = "2026-08-02T10:00:00"
+
+    sorted_transactions = tracker.sort_transactions(
+        sort_by="date",
+    )
+
+    assert [transaction.created_at for transaction in sorted_transactions] == [
+        "2026-08-01T10:00:00",
+        "2026-08-02T10:00:00",
+        "2026-08-03T10:00:00",
+    ]
+
+
+def test_sort_transactions_with_invalid_option():
+    tracker = FinanceTracker()
+
+    with pytest.raises(
+        ValueError,
+        match="Invalid sort option.",
+    ):
+        tracker.sort_transactions(sort_by="category")
+
+
+def test_sort_transactions_does_not_change_original_order():
+    tracker = FinanceTracker()
+
+    tracker.add_income(50000)
+    tracker.add_expense(1000)
+    tracker.add_expense(500)
+
+    tracker.sort_transactions(
+        sort_by="amount",
+    )
+
+    original_transactions = tracker.get_transactions()
+
+    assert [transaction.amount for transaction in original_transactions] == [
+        50000,
+        1000,
+        500,
+    ]

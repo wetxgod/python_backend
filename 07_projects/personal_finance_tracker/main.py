@@ -159,6 +159,7 @@ def show_menu():
     print("11. Show filtered transactions")
     print("12. Delete transaction")
     print("13. Update transaction")
+    print("14. Sort transactions")
 
 
 def handle_choice(choice):
@@ -217,6 +218,10 @@ def handle_choice(choice):
         update_transaction()
         pause()
 
+    elif choice == "14":
+        show_sorted_transactions()
+        pause()
+
     else:
         print("Invalid option. Please try again.")
         pause()
@@ -235,7 +240,7 @@ def show_settings():
 def main():
     while True:
         show_menu()
-        choice = input("Enter your choice (1-9): ")
+        choice = input("Enter your choice (1-14): ")
 
         should_continue = handle_choice(choice)
 
@@ -404,6 +409,43 @@ def update_transaction():
         f"{updated_transaction.amount:.2f} "
         f"| {updated_transaction.category}"
     )
+
+
+def show_sorted_transactions():
+    sort_by = input("Sort by date or amount: ").strip().lower()
+
+    order = input("Order ascending or descending: ").strip().lower()
+
+    if sort_by not in ("date", "amount"):
+        print("Invalid sort option.")
+        return
+
+    if order not in ("ascending", "descending"):
+        print("Invalid order.")
+        return
+
+    reverse = order == "descending"
+
+    transactions = tracker.sort_transactions(
+        sort_by=sort_by,
+        reverse=reverse,
+    )
+
+    if not transactions:
+        print("No transactions yet.")
+        return
+
+    print()
+    print("Sorted transactions:")
+
+    for index, transaction in enumerate(transactions, start=1):
+        sign = "+" if transaction.transaction_type == "income" else "-"
+
+        print(f"{index}. {sign}{transaction.amount:.2f} " f"| {transaction.category}")
+        print(f"   Date: {transaction.created_at}")
+
+        if transaction.description:
+            print(f"   {transaction.description}")
 
 
 if __name__ == "__main__":
