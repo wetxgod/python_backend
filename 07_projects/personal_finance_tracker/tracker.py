@@ -5,7 +5,7 @@ class FinanceTracker:
 
     def _validate_amount(self, amount):
         if amount <= 0:
-            raise ValueError("Amount must be a positive number.")
+            raise ValueError("Amount must be greater than zero.")
 
     def add_income(self, amount):
         self._validate_amount(amount)
