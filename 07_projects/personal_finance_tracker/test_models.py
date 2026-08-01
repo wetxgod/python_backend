@@ -39,3 +39,19 @@ def test_transaction_to_dict():
         "category": "food",
         "description": "Groceries",
     }
+
+
+def test_transaction_from_dict():
+    data = {
+        "amount": 1500,
+        "transaction_type": "expense",
+        "category": "food",
+        "description": "Groceries",
+    }
+
+    transaction = Transaction.from_dict(data)
+
+    assert transaction.amount == 1500
+    assert transaction.transaction_type == "expense"
+    assert transaction.category == "food"
+    assert transaction.description == "Groceries"

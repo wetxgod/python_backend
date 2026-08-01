@@ -126,8 +126,20 @@ def test_to_dict():
     data = tracker.to_dict()
 
     assert data == {
-        "incomes": [50000],
-        "expenses": [10000],
+        "transactions": [
+            {
+                "amount": 50000,
+                "transaction_type": "income",
+                "category": "other",
+                "description": "",
+            },
+            {
+                "amount": 10000,
+                "transaction_type": "expense",
+                "category": "other",
+                "description": "",
+            },
+        ]
     }
 
 
@@ -153,3 +165,37 @@ def test_load_data_with_missing_keys():
 
     assert tracker.get_incomes() == []
     assert tracker.get_expenses() == []
+
+
+def test_add_income_creates_transaction():
+    tracker = FinanceTracker()
+
+    tracker.add_income(
+        50000,
+        category="salary",
+        description="August salary",
+    )
+
+    transactions = tracker.get_transactions()
+
+    assert len(transactions) == 1
+    assert transactions[0].amount == 50000
+    assert transactions[0].transaction_type == "income"
+    assert transactions[0].category == "salary"
+    assert transactions[0].description == "August salary"
+
+
+def test_add_expense_creates_transaction():
+    tracker = FinanceTracker()
+
+    tracker.add_expense(
+        1000,
+        category="food",
+        description="Groceries",
+    )
+
+    transaction = tracker.get_transactions()[0]
+
+    assert transaction.amount == 1000
+    assert transaction.transaction_type == "expense"
+    assert transaction.category == "food"
