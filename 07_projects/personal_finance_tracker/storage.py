@@ -3,14 +3,14 @@ import json
 DATA_FILE = "data.json"
 
 
-def save_data(data):
-    with open(DATA_FILE, "w", encoding="utf-8") as file:
+def save_data(data, file_path=DATA_FILE):
+    with open(file_path, "w", encoding="utf-8") as file:
         json.dump(data, file, indent=4)
 
 
-def load_data():
+def load_data(file_path=DATA_FILE):
     try:
-        with open(DATA_FILE, "r", encoding="utf-8") as file:
+        with open(file_path, "r", encoding="utf-8") as file:
             return json.load(file)
     except FileNotFoundError:
         return {
