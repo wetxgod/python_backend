@@ -55,12 +55,22 @@ class FinanceTracker:
 
         return statistics
 
-    def clear_data(self):
-        self.incomes.clear()
-        self.expenses.clear()
-
     def get_incomes(self):
         return self.incomes.copy()
 
     def get_expenses(self):
         return self.expenses.copy()
+
+    def to_dict(self):
+        return {
+            "incomes": self.get_incomes(),
+            "expenses": self.get_expenses(),
+        }
+
+    def load_data(self, data):
+        self.incomes = data.get("incomes", [])
+        self.expenses = data.get("expenses", [])
+
+    def clear_data(self):
+        self.incomes.clear()
+        self.expenses.clear()

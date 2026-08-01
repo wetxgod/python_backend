@@ -1,6 +1,8 @@
+from storage import load_data, save_data
 from tracker import FinanceTracker
 
 tracker = FinanceTracker()
+tracker.load_data(load_data())
 
 
 def pause():
@@ -18,6 +20,7 @@ def add_income():
                 )
                 continue
             tracker.add_income(amount)
+            save_data(tracker.to_dict())
             print(f"Income of {amount:.2f} added.")
             break
         except ValueError:
@@ -35,6 +38,7 @@ def add_expense():
                 print("Amount must be greater than zero. Please enter a valid number.")
                 continue
             tracker.add_expense(amount)
+            save_data(tracker.to_dict())
             print(f"Expense of {amount:.2f} added.")
             break
         except ValueError:
@@ -104,6 +108,18 @@ def show_statistics():
         print(f"Lowest expense: {statistics['lowest_expense']:.2f}")
 
 
+def clear_data():
+    confirmation = input(
+        "Are you sure you want to clear all data? This action cannot be undone. (yes/no): "
+    )
+    if confirmation.lower() == "yes":
+        tracker.clear_data()
+        save_data(tracker.to_dict())
+        print("All data cleared.")
+    else:
+        print("Clear data operation canceled.")
+
+
 def show_menu():
     print("=" * 35)
     print("Personal Finance Tracker")
@@ -117,6 +133,7 @@ def show_menu():
     print("6. About")
     print("7. Settings")
     print("8. Show statistics")
+    print("9. Clear all data")
 
 
 def handle_choice(choice):
@@ -141,6 +158,7 @@ def handle_choice(choice):
 
     elif choice == "5":
         print("Goodbye!")
+        return False
 
     elif choice == "6":
         show_about()
@@ -154,9 +172,15 @@ def handle_choice(choice):
         show_statistics()
         pause()
 
+    elif choice == "9":
+        clear_data()
+        pause()
+
     else:
         print("Invalid option. Please try again.")
         pause()
+
+    return True
 
 
 def show_about():
@@ -167,10 +191,16 @@ def show_settings():
     print("Settings will be available soon.")
 
 
-while True:
-    show_menu()
-    choice = input("Choose option: ")
-    handle_choice(choice)
+def main():
+    while True:
+        show_menu()
+        choice = input("Enter your choice (1-9): ")
 
-    if choice == "5":
-        break
+        should_continue = handle_choice(choice)
+
+        if not should_continue:
+            break
+
+
+if __name__ == "__main__":
+    main()
