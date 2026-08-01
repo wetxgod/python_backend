@@ -14,35 +14,39 @@ def add_income():
     while True:
         try:
             amount = float(input("Enter income amount: "))
-            if amount <= 0:
-                print(
-                    "Income amount must be a positive number. Please enter a valid number."
-                )
-                continue
-            tracker.add_income(amount)
-            save_data(tracker.to_dict())
-            print(f"Income of {amount:.2f} added.")
-            break
         except ValueError:
             print("Invalid input. Please enter a valid number.")
+            continue
+
+        try:
+            tracker.add_income(amount)
+        except ValueError as error:
+            print(error)
+            continue
+
+        save_data(tracker.to_dict())
+        print(f"Income of {amount:.2f} added.")
+        break
 
 
 def add_expense():
     while True:
         try:
             amount = float(input("Enter expense amount: "))
-            if amount < 0:
-                print("Expense amount cannot be negative. Please enter a valid number.")
-                continue
-            if amount == 0:
-                print("Amount must be greater than zero. Please enter a valid number.")
-                continue
-            tracker.add_expense(amount)
-            save_data(tracker.to_dict())
-            print(f"Expense of {amount:.2f} added.")
-            break
         except ValueError:
             print("Invalid input. Please enter a valid number.")
+            continue
+
+        try:
+            tracker.add_expense(amount)
+        except ValueError as error:
+            print(error)
+            continue
+
+        save_data(tracker.to_dict())
+
+        print(f"Expense of {amount:.2f} added.")
+        break
 
 
 def show_balance():

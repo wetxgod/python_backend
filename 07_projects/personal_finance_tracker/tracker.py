@@ -3,10 +3,16 @@ class FinanceTracker:
         self.incomes = []
         self.expenses = []
 
+    def _validate_amount(self, amount):
+        if amount <= 0:
+            raise ValueError("Amount must be a positive number.")
+
     def add_income(self, amount):
+        self._validate_amount(amount)
         self.incomes.append(amount)
 
     def add_expense(self, amount):
+        self._validate_amount(amount)
         self.expenses.append(amount)
 
     def get_total_income(self):
