@@ -1,5 +1,6 @@
-incomes = []
-expenses = []
+from tracker import FinanceTracker
+
+tracker = FinanceTracker()
 
 
 def pause():
@@ -11,14 +12,13 @@ def add_income():
     while True:
         try:
             amount = float(input("Enter income amount: "))
-            if amount < 0:
-                print("Income amount cannot be negative. Please enter a valid number.")
+            if amount <= 0:
+                print(
+                    "Income amount must be a positive number. Please enter a valid number."
+                )
                 continue
-            if amount == 0:
-                print("Amount must be greater than zero. Please enter a valid number.")
-                continue
-            incomes.append(amount)
-            print(f"Income of {amount} added.")
+            tracker.add_income(amount)
+            print(f"Income of {amount:.2f} added.")
             break
         except ValueError:
             print("Invalid input. Please enter a valid number.")
@@ -34,71 +34,74 @@ def add_expense():
             if amount == 0:
                 print("Amount must be greater than zero. Please enter a valid number.")
                 continue
-            expenses.append(amount)
-            print(f"Expense of {amount} added.")
+            tracker.add_expense(amount)
+            print(f"Expense of {amount:.2f} added.")
             break
         except ValueError:
             print("Invalid input. Please enter a valid number.")
 
 
 def show_balance():
-    total_income = sum(incomes)
-    total_expense = sum(expenses)
-    balance = total_income - total_expense
-    print(f"Total Income: {total_income}")
+    total_income = tracker.get_total_income()
+    total_expense = tracker.get_total_expense()
+    balance = tracker.calculate_balance()
+    print(f"Total Income: {total_income:.2f}")
     print()
-    print(f"Total Expense: {total_expense}")
+    print(f"Total Expense: {total_expense:.2f}")
     print()
-    print(f"Balance: {balance}")
+    print(f"Balance: {balance:.2f}")
 
 
 def show_history():
+    incomes = tracker.get_incomes()
+    expenses = tracker.get_expenses()
+
     print("Income:")
 
     if not incomes:
         print("No income yet.")
     else:
         for income in incomes:
-            print(f"- {income}")
+            print(f"+ {income:.2f}")
 
     print()
-
     print("Expenses:")
+
     if not expenses:
         print("No expenses yet.")
     else:
         for expense in expenses:
-            print(f"- {expense}")
+            print(f"- {expense:.2f}")
 
 
 def show_statistics():
-
-    income_count = len(incomes)
-    expense_count = len(expenses)
-    if incomes:
-        highest_income = max(incomes)
-        lowest_income = min(incomes)
-        average_income = sum(incomes) / income_count
-    if expenses:
-        average_expense = sum(expenses) / expense_count
+    statistics = tracker.get_statistics()
 
     print("Statistics:")
     print()
-    print(f"Income count: {income_count}")
-    if incomes:
-        print(f"Average income: {average_income}")
-    else:
+    print(f"Income count: {statistics['income_count']}")
+    print(f"Expense count: {statistics['expense_count']}")
+    print(f"Total income: {statistics['total_income']:.2f}")
+    print(f"Total expense: {statistics['total_expense']:.2f}")
+    print(f"Balance: {statistics['balance']:.2f}")
+
+    print()
+
+    if statistics["average_income"] is None:
         print("No income data.")
-    print()
-    print(f"Expense count: {expense_count}")
-    if expenses:
-        print(f"Average expense: {average_expense}")
     else:
-        print("No expense data.")
+        print(f"Average income: {statistics['average_income']:.2f}")
+        print(f"Highest income: {statistics['highest_income']:.2f}")
+        print(f"Lowest income: {statistics['lowest_income']:.2f}")
+
     print()
-    if incomes:
-        print(f"Highest income: {highest_income}")
-        print(f"Lowest income: {lowest_income}")
+
+    if statistics["average_expense"] is None:
+        print("No expense data.")
+    else:
+        print(f"Average expense: {statistics['average_expense']:.2f}")
+        print(f"Highest expense: {statistics['highest_expense']:.2f}")
+        print(f"Lowest expense: {statistics['lowest_expense']:.2f}")
 
 
 def show_menu():
