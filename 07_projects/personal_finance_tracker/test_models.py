@@ -33,12 +33,13 @@ def test_transaction_to_dict():
         description="Groceries",
     )
 
-    assert transaction.to_dict() == {
-        "amount": 10000,
-        "transaction_type": "expense",
-        "category": "food",
-        "description": "Groceries",
-    }
+    data = transaction.to_dict()
+
+    assert data["amount"] == 10000
+    assert data["transaction_type"] == "expense"
+    assert data["category"] == "food"
+    assert data["description"] == "Groceries"
+    assert data["created_at"] == transaction.created_at
 
 
 def test_transaction_from_dict():
@@ -55,3 +56,27 @@ def test_transaction_from_dict():
     assert transaction.transaction_type == "expense"
     assert transaction.category == "food"
     assert transaction.description == "Groceries"
+
+
+def test_transaction_has_creation_date():
+    transaction = Transaction(
+        amount=1000,
+        transaction_type="expense",
+        category="food",
+    )
+
+    assert transaction.created_at
+    assert "T" in transaction.created_at
+
+
+def test_transaction_from_dict_without_date():
+    data = {
+        "amount": 1000,
+        "transaction_type": "expense",
+        "category": "food",
+        "description": "Groceries",
+    }
+
+    transaction = Transaction.from_dict(data)
+
+    assert transaction.created_at

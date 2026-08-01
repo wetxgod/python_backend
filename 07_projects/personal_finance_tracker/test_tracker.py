@@ -124,23 +124,21 @@ def test_to_dict():
     tracker.add_expense(10000)
 
     data = tracker.to_dict()
+    transactions = data["transactions"]
 
-    assert data == {
-        "transactions": [
-            {
-                "amount": 50000,
-                "transaction_type": "income",
-                "category": "other",
-                "description": "",
-            },
-            {
-                "amount": 10000,
-                "transaction_type": "expense",
-                "category": "other",
-                "description": "",
-            },
-        ]
-    }
+    assert len(transactions) == 2
+
+    assert transactions[0]["amount"] == 50000
+    assert transactions[0]["transaction_type"] == "income"
+    assert transactions[0]["category"] == "other"
+    assert transactions[0]["description"] == ""
+    assert transactions[0]["created_at"]
+
+    assert transactions[1]["amount"] == 10000
+    assert transactions[1]["transaction_type"] == "expense"
+    assert transactions[1]["category"] == "other"
+    assert transactions[1]["description"] == ""
+    assert transactions[1]["created_at"]
 
 
 def test_load_data():

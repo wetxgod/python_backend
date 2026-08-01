@@ -90,12 +90,10 @@ def show_history():
     print()
 
     for index, transaction in enumerate(transactions, start=1):
-        if transaction.transaction_type == "income":
-            sign = "+"
-        else:
-            sign = "-"
+        sign = "+" if transaction.transaction_type == "income" else "-"
 
         print(f"{index}. {sign}{transaction.amount:.2f} " f"| {transaction.category}")
+        print(f"   Date: {transaction.created_at}")
 
         if transaction.description:
             print(f"   {transaction.description}")
