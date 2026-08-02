@@ -92,7 +92,7 @@ def show_history():
     for index, transaction in enumerate(transactions, start=1):
         sign = "+" if transaction.transaction_type == "income" else "-"
 
-        print(f"{index}. {sign}{transaction.amount:.2f} " f"| {transaction.category}")
+        print(f"{index}. {sign}{transaction.amount:.2f} | {transaction.category}")
         print(f"   Date: {transaction.created_at}")
 
         if transaction.description:
@@ -298,7 +298,7 @@ def show_filtered_transactions():
     for index, transaction in enumerate(transactions, start=1):
         sign = "+" if transaction.transaction_type == "income" else "-"
 
-        print(f"{index}. {sign}{transaction.amount:.2f} " f"| {transaction.category}")
+        print(f"{index}. {sign}{transaction.amount:.2f} | {transaction.category}")
 
         if transaction.description:
             print(f"   {transaction.description}")
@@ -435,7 +435,7 @@ def show_sorted_transactions():
     for index, transaction in enumerate(transactions, start=1):
         sign = "+" if transaction.transaction_type == "income" else "-"
 
-        print(f"{index}. {sign}{transaction.amount:.2f} " f"| {transaction.category}")
+        print(f"{index}. {sign}{transaction.amount:.2f} | {transaction.category}")
         print(f"   Date: {transaction.created_at}")
 
         if transaction.description:
@@ -476,7 +476,7 @@ def show_monthly_report():
     for index, transaction in enumerate(transactions, start=1):
         sign = "+" if transaction.transaction_type == "income" else "-"
 
-        print(f"{index}. {sign}{transaction.amount:.2f} " f"| {transaction.category}")
+        print(f"{index}. {sign}{transaction.amount:.2f} | {transaction.category}")
         print(f"   Date: {transaction.created_at}")
 
 

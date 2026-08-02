@@ -1,5 +1,5 @@
 from dataclasses import asdict, dataclass, field
-from datetime import datetime
+from datetime import UTC, datetime
 
 
 @dataclass
@@ -9,7 +9,7 @@ class Transaction:
     category: str
     description: str = ""
     created_at: str = field(
-        default_factory=lambda: datetime.now().isoformat(timespec="seconds")
+        default_factory=lambda: datetime.now(UTC).isoformat(timespec="seconds")
     )
 
     def to_dict(self):
@@ -24,6 +24,6 @@ class Transaction:
             description=data.get("description", ""),
             created_at=data.get(
                 "created_at",
-                datetime.now().isoformat(timespec="seconds"),
+                datetime.now(UTC).isoformat(timespec="seconds"),
             ),
         )
